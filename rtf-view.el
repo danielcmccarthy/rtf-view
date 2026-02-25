@@ -25,6 +25,7 @@
   :type '(string)
   :group 'rtf-view)
 
+;;;###autoload
 (defun rtf-view ()
   "Format the current buffer as an RTF document."
   (interactive)
@@ -42,6 +43,7 @@
     (shr-insert-document dom)
     (goto-char (point-min))))
 
+;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.rtf\\'" . rtf-view))
 
 (provide 'rtf-view)
