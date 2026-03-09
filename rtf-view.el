@@ -25,7 +25,7 @@
 ;;; Commentary:
 ;; Display RTF documents in all of their formatted glory. Editing isn't possible yet.
 ;;
-;; Requires GNU unrtf.
+;; Requires GNU unrtf and libxml2.
 
 ;;; Todo:
 ;; * keep source in a data buffer
@@ -45,6 +45,8 @@
 (defun rtf-view ()
   "Format the current buffer as an RTF document."
   (interactive)
+  (unless (libxml-available-p)
+    (warn "Emacs was built without libxml2. rtf-view will not work."))
   (unless (locate-file rtf-view-unrtf-executable exec-path)
     (error  "Could not find %s" rtf-view-unrtf-executable))
   (message "Formatting %s with unrtf..." (buffer-name))
