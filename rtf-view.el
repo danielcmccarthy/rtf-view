@@ -58,7 +58,8 @@
                                          (point-max))))
       (erase-buffer)
       (shr-insert-document dom)
-      (goto-char (point-min)))))
+      (goto-char (point-min)))
+    (set-buffer-modified-p nil)))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.rtf\\'" . rtf-view))
