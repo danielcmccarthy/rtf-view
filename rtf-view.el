@@ -50,7 +50,12 @@
   (unless (locate-file rtf-view-unrtf-executable exec-path)
     (error  "Could not find %s" rtf-view-unrtf-executable))
   (message "Formatting %s with unrtf..." (buffer-name))
-  (let ((inhibit-read-only t))
+  (let ((inhibit-read-only t)
+        ;; Prevent Emacs from creating .#lockfile symlinks in the
+        ;; source file's directory when the buffer is modified.
+        (create-lockfiles nil)
+        ;; Run unrtf locally.
+        (default-directory temporary-file-directory))
     (shell-command-on-region (point-min)
                              (point-max)
                              (format "%s --nopict" rtf-view-unrtf-executable)
@@ -60,8 +65,11 @@
                                          (point-max))))
       (erase-buffer)
       (shr-insert-document dom)
-      (goto-char (point-min)))
-    (set-buffer-modified-p nil)))
+      (goto-char (point-min))))
+  (set-buffer-modified-p nil)
+  (setq buffer-read-only t)
+  ;; Disable auto-save — this buffer should never write back to the file.
+  (auto-save-mode -1))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.rtf\\'" . rtf-view))
