@@ -48,16 +48,22 @@
   (unless (locate-file rtf-view-unrtf-executable exec-path)
     (error  "Could not find %s" rtf-view-unrtf-executable))
   (message "Formatting %s with unrtf..." (buffer-name))
-  (shell-command-on-region (point-min)
-                           (point-max)
-                           (format "%s --nopict" rtf-view-unrtf-executable)
-                           t
-                           t)
-  (let ((dom (libxml-parse-html-region (point-min)
-                                       (point-max))))
-    (erase-buffer)
-    (shr-insert-document dom)
-    (goto-char (point-min))))
+  (let ((inhibit-read-only t)
+        ;; Run unrtf in a temp directory so it doesn't create files
+        ;; (e.g. extracted pictures) in the source file's directory.
+        (default-directory temporary-file-directory))
+    (shell-command-on-region (point-min)
+                             (point-max)
+                             (format "%s --nopict" rtf-view-unrtf-executable)
+                             t
+                             t)
+    (let ((dom (libxml-parse-html-region (point-min)
+                                         (point-max))))
+      (erase-buffer)
+      (shr-insert-document dom)
+      (goto-char (point-min))))
+  (set-buffer-modified-p nil)
+  (setq buffer-read-only t))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.rtf\\'" . rtf-view))
