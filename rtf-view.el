@@ -3,7 +3,7 @@
 ;; Author: Dan McCarthy <daniel.c.mccarthy@gmail.com>
 ;; URL: https://github.com/danielcmccarthy/rtf-view.git
 ;; Keywords: files data
-;; Package-Version: 1.0
+;; Package-Version: 1.1
 ;; Package-Requires: ((emacs "24.1"))
 ;; This file is NOT part of GNU Emacs.
 
